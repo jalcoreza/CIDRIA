@@ -1,0 +1,8 @@
+# Sitio estático: no hay build, Netlify publica la carpeta tal cual.
+[build]
+  publish = "."
+
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=604800"
