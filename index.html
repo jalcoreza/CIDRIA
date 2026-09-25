@@ -1,6 +1,15 @@
 <!doctype html>
 <html lang="es">
 <head>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-3E6J76LLC2"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-3E6J76LLC2');
+  </script>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>CIDRIA</title>
@@ -9,11 +18,11 @@
   <meta property="og:title" content="CIDRIA — Latinoamérica en la frontera de la IA">
   <meta property="og:description" content="Datos en primera persona del trabajo real en Latinoamérica, para robótica e IA.">
   <meta property="og:type" content="website">
-  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@300;400;600;700&family=Barlow:wght@400;500;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="assets/css/styles.css">
+  <link rel="stylesheet" href="styles.css">
   <script>document.documentElement.classList.add("js")</script>
 </head>
 <body>
@@ -49,14 +58,14 @@
           <div class="hero-copy">
             <p class="eyebrow hero-eyebrow"><span data-scramble>Centro de Investigación en Datos para Robótica e IA</span><b>/</b><span data-scramble>Desde Latinoamérica</span></p>
             <h1 id="hero-title"><span>Latam entrena</span><span>a los robots</span><span><em>del mañana.</em></span></h1>
-            <p class="hero-lede">Grabamos en primera persona el trabajo real de fábricas y laboratorios latinoamericanos, para los equipos que construyen la robótica y la IA de frontera.</p>
+            <p class="hero-lede">Grabamos en primera persona el trabajo real de fábricas y laboratorios de Latinoamérica para entrenar la robótica y la IA del mañana.</p>
             <div class="hero-tags reveal reveal-delay-2"><span>Primera persona</span><span>Solo manos</span><span>Con consentimiento</span></div>
             <a class="button button-primary reveal reveal-delay-3" href="#contact">Hablemos<span>→</span></a>
           </div>
 
           <figure class="hero-diagram hero-pov reveal reveal-delay-2" aria-label="Cuadro real de una cámara en primera persona: manos inspeccionando una tapa">
             <div class="pov-frame">
-            <img src="assets/img/pov-inspeccion.jpg" alt="" width="1049" height="566" fetchpriority="high">
+            <img src="pov-inspeccion.jpg" alt="" width="1049" height="566" fetchpriority="high">
             <svg class="pov-overlay" viewBox="0 0 1049 566" preserveAspectRatio="xMaxYMid slice" aria-hidden="true">
               <g class="pov-box" style="--d:.9s"><rect x="415" y="222" width="250" height="200"/><text x="428" y="211">MANO_IZQ <tspan data-conf="0.97">0.97</tspan></text></g>
               <g class="pov-box" style="--d:1.1s"><rect x="650" y="218" width="215" height="220"/><text x="650" y="462">MANO_DER <tspan data-conf="0.95">0.95</tspan></text></g>
@@ -98,31 +107,31 @@
             <p class="section-tag"><strong>01</strong>Lo que vemos</p>
             <div class="reveal-on-scroll">
               <h2 id="samples-title">Lo que ve la cámara.</h2>
-              <p>Clips reales de nuestras cámaras, en turnos reales.</p>
+              <p>Trabajo real, en ambientes reales. Cada cámara rota entre tareas.</p>
             </div>
           </div>
 
           <div class="feed-wall reveal-on-scroll" aria-label="Clips reales de nuestras cámaras">
             <figure class="feed">
-              <video src="assets/video/lab.mp4" poster="assets/img/lab-poster.jpg" muted loop playsinline preload="metadata" aria-hidden="true"></video>
+              <video src="lab.mp4" poster="lab-poster.jpg" muted playsinline preload="auto" aria-hidden="true"></video>
               <span class="feed-corners" aria-hidden="true"></span>
               <div class="feed-hud"><span><i class="sample-rec"></i>CAM-04</span><span class="feed-tc">00:00:00</span></div>
               <figcaption><b>Farma</b><span>Área controlada</span></figcaption>
             </figure>
             <figure class="feed">
-              <video src="assets/video/farma-empaque.mp4" poster="assets/img/farma-poster.jpg" muted loop playsinline preload="metadata" aria-hidden="true"></video>
+              <video src="farma-empaque.mp4" poster="farma-poster.jpg" muted playsinline preload="auto" aria-hidden="true"></video>
               <span class="feed-corners" aria-hidden="true"></span>
               <div class="feed-hud"><span><i class="sample-rec"></i>CAM-05</span><span class="feed-tc">00:00:00</span></div>
               <figcaption><b>Empaque</b><span>Farma · fin de línea</span></figcaption>
             </figure>
             <figure class="feed">
-              <video src="assets/video/plasticos-empaque.mp4" poster="assets/img/plasticos-empaque-poster.jpg" muted loop playsinline preload="metadata" aria-hidden="true"></video>
+              <video src="plasticos-empaque.mp4" poster="plasticos-empaque-poster.jpg" muted playsinline preload="auto" aria-hidden="true"></video>
               <span class="feed-corners" aria-hidden="true"></span>
               <div class="feed-hud"><span><i class="sample-rec"></i>CAM-02</span><span class="feed-tc">00:00:00</span></div>
               <figcaption><b>Pesaje</b><span>Plásticos · soplado</span></figcaption>
             </figure>
             <figure class="feed">
-              <video src="assets/video/logistica.mp4" poster="assets/img/logistica-poster.jpg" muted loop playsinline preload="metadata" aria-hidden="true"></video>
+              <video src="logistica.mp4" poster="logistica-poster.jpg" muted playsinline preload="auto" aria-hidden="true"></video>
               <span class="feed-corners" aria-hidden="true"></span>
               <div class="feed-hud"><span><i class="sample-rec"></i>CAM-07</span><span class="feed-tc">00:00:00</span></div>
               <figcaption><b>Logística</b><span>Almacén · apilador</span></figcaption>
@@ -137,7 +146,7 @@
         <div class="container invite-layout" style="position:relative">
           <div class="invite-copy reveal-on-scroll">
             <p class="eyebrow eyebrow-light">02 — Conectemos</p>
-            <h2 id="contact-title">De la planta <em>a la frontera.</em></h2>
+            <h2 id="contact-title">De la industria <em>al futuro.</em></h2>
             <p>¿Construyes robots o modelos? ¿Operas una planta en Latinoamérica? Escríbenos.</p>
             <div class="invite-note"><span>BOLIVIA</span><span>MANUFACTURA</span><span>FARMA</span><span>ALIMENTOS Y BEBIDAS</span></div>
           </div>
@@ -173,6 +182,6 @@
     </footer>
   </div>
 
-  <script src="assets/js/main.js" defer></script>
+  <script src="main.js" defer></script>
 </body>
 </html>

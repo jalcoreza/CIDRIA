@@ -3,6 +3,6 @@
   publish = "."
 
 [[headers]]
-  for = "/assets/*"
+  for = "/*.mp4"
   [headers.values]
     Cache-Control = "public, max-age=604800"

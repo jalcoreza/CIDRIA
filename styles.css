@@ -214,3 +214,9 @@ a { color:inherit; text-decoration:none; } a:focus-visible,button:focus-visible,
   .pov-frame { aspect-ratio:1.4; }
   .pov-caption { max-width:520px; }
 }
+
+/* v10 — cada cámara rota entre clips con fundido */
+.feed video { transition:opacity .35s ease, filter .4s ease, transform .8s var(--ease); }
+.feed.is-switching video { opacity:0; }
+.feed figcaption b,.feed figcaption span { transition:opacity .35s ease; }
+.feed.is-switching figcaption b,.feed.is-switching figcaption span { opacity:0; }

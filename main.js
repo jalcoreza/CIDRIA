@@ -15,19 +15,77 @@ menu?.addEventListener("click", (e) => {
 });
 
 // ---------- Muro de cámaras ----------
-// Para cambiar un clip: reemplaza el .mp4 en assets/video/ o edita el <figure class="feed"> en index.html.
+// Cada recuadro rota entre sus clips. Para agregar uno: pon el .mp4 y su -poster.jpg
+// en esta carpeta y suma una línea en la lista del recuadro que corresponda.
+const PLAYLISTS = [
+  [ // CAM-04 · laboratorio
+    { v: "lab", t: "Farma", l: "Área controlada" },
+    { v: "lab-microbiologia", t: "Microbiología", l: "Farma · siembra" },
+    { v: "lab-placas", t: "Placas de cultivo", l: "Laboratorio · control de calidad" },
+    { v: "lab-mesa", t: "Mesa de trabajo", l: "Laboratorio · análisis" },
+    { v: "lab-dosificacion", t: "Dosificación", l: "Laboratorio · preparación" },
+  ],
+  [ // CAM-05 · empaque farma
+    { v: "farma-empaque", t: "Empaque", l: "Farma · fin de línea", p: "farma-poster" },
+    { v: "farma-cajas", t: "Estuchado", l: "Farma · empaque secundario" },
+    { v: "etiquetado", t: "Etiquetado", l: "Farma · área limpia" },
+    { v: "farma-encajonado", t: "Encajonado", l: "Farma · despacho" },
+  ],
+  [ // CAM-02 · plásticos
+    { v: "plasticos-empaque", t: "Pesaje", l: "Plásticos · soplado" },
+    { v: "plasticos-ensamblaje", t: "Ensamblaje", l: "Plásticos · línea" },
+    { v: "plasticos-acabado", t: "Acabado", l: "Plásticos · control de calidad" },
+    { v: "plasticos-envasado", t: "Envasado", l: "Plásticos · fin de línea" },
+    { v: "plasticos-empaque-tubos", t: "Empaque", l: "Plásticos · embolsado" },
+  ],
+  [ // CAM-07 · operación y logística
+    { v: "logistica", t: "Logística", l: "Almacén · apilador" },
+    { v: "maquina-limpieza", t: "Operación de máquina", l: "Inyección · limpieza de molde" },
+    { v: "logistica-pallets", t: "Paletizado", l: "Almacén · transpaleta" },
+    { v: "lavado-piezas", t: "Lavado de piezas", l: "Planta · mantenimiento" },
+  ],
+];
+
 (() => {
   const feeds = [...document.querySelectorAll(".feed")];
   if (!feeds.length) return;
   const pad = (n) => String(n).padStart(2, "0");
+
+  feeds.forEach((feed, k) => {
+    const list = PLAYLISTS[k];
+    const video = feed.querySelector("video");
+    if (!list || !video) return;
+    let i = 0;
+    video.loop = list.length < 2;
+    const warm = new Image(); // precarga el poster del siguiente clip
+
+    const show = (n) => {
+      const c = list[n];
+      feed.classList.add("is-switching");
+      setTimeout(() => {
+        video.src = `${c.v}.mp4`;
+        video.poster = `${c.p || c.v + "-poster"}.jpg`;
+        feed.querySelector("figcaption b").textContent = c.t;
+        feed.querySelector("figcaption span").textContent = c.l;
+        if (feed.dataset.visible === "1" && !reduceMotion) video.play().catch(() => {});
+        feed.classList.remove("is-switching");
+        const nx = list[(n + 1) % list.length];
+        warm.src = `${nx.p || nx.v + "-poster"}.jpg`;
+      }, 350);
+    };
+    video.addEventListener("ended", () => { i = (i + 1) % list.length; show(i); });
+  });
+
   const io = new IntersectionObserver((entries) => {
     entries.forEach(({ target, isIntersecting }) => {
       const v = target.querySelector("video");
+      target.dataset.visible = isIntersecting ? "1" : "0";
       if (isIntersecting && !reduceMotion) v.play().catch(() => {});
       else v.pause();
     });
   }, { threshold: 0.25 });
   feeds.forEach((f) => io.observe(f));
+
   setInterval(() => {
     feeds.forEach((f) => {
       const s = Math.floor(f.querySelector("video").currentTime);
@@ -63,6 +121,7 @@ if (form) {
       form.reset();
       form.classList.add("is-sent");
       status.textContent = "Gracias, recibimos tu mensaje. Te escribimos pronto.";
+      if (typeof gtag === "function") gtag("event", "generate_lead", { form_name: "interest" });
     } catch {
       status.textContent = "No se pudo enviar. Intenta de nuevo en un momento.";
     } finally {
