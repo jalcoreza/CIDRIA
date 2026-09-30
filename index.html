@@ -107,35 +107,29 @@
             <p class="section-tag"><strong>01</strong>Lo que vemos</p>
             <div class="reveal-on-scroll">
               <h2 id="samples-title">Lo que ve la cámara.</h2>
-              <p>Trabajo real, en ambientes reales. Cada cámara rota entre tareas.</p>
+              <p>Trabajo real, en ambientes reales. Elige un área o deja que corra.</p>
             </div>
           </div>
 
-          <div class="feed-wall reveal-on-scroll" aria-label="Clips reales de nuestras cámaras">
-            <figure class="feed">
-              <video src="lab.mp4" poster="lab-poster.jpg" muted playsinline preload="auto" aria-hidden="true"></video>
+          <div class="reel reveal-on-scroll" aria-label="Clips reales de nuestras cámaras">
+            <div class="reel-bar">
+              <div class="reel-filters" role="tablist" aria-label="Filtrar por área"></div>
+              <p class="reel-count" id="reel-count"></p>
+            </div>
+
+            <div class="reel-stage">
+              <video id="reel-video" src="lab.mp4" poster="lab-poster.jpg" muted playsinline preload="auto" aria-hidden="true"></video>
               <span class="feed-corners" aria-hidden="true"></span>
-              <div class="feed-hud"><span><i class="sample-rec"></i>CAM-04</span><span class="feed-tc">00:00:00</span></div>
-              <figcaption><b>Farma</b><span>Área controlada</span></figcaption>
-            </figure>
-            <figure class="feed">
-              <video src="farma-empaque.mp4" poster="farma-poster.jpg" muted playsinline preload="auto" aria-hidden="true"></video>
-              <span class="feed-corners" aria-hidden="true"></span>
-              <div class="feed-hud"><span><i class="sample-rec"></i>CAM-05</span><span class="feed-tc">00:00:00</span></div>
-              <figcaption><b>Empaque</b><span>Farma · fin de línea</span></figcaption>
-            </figure>
-            <figure class="feed">
-              <video src="plasticos-empaque.mp4" poster="plasticos-empaque-poster.jpg" muted playsinline preload="auto" aria-hidden="true"></video>
-              <span class="feed-corners" aria-hidden="true"></span>
-              <div class="feed-hud"><span><i class="sample-rec"></i>CAM-02</span><span class="feed-tc">00:00:00</span></div>
-              <figcaption><b>Pesaje</b><span>Plásticos · soplado</span></figcaption>
-            </figure>
-            <figure class="feed">
-              <video src="logistica.mp4" poster="logistica-poster.jpg" muted playsinline preload="auto" aria-hidden="true"></video>
-              <span class="feed-corners" aria-hidden="true"></span>
-              <div class="feed-hud"><span><i class="sample-rec"></i>CAM-07</span><span class="feed-tc">00:00:00</span></div>
-              <figcaption><b>Logística</b><span>Almacén · apilador</span></figcaption>
-            </figure>
+              <div class="feed-hud"><span><i class="sample-rec"></i><b>REC · POV</b></span><span id="reel-tc">00:00:00</span></div>
+              <div class="reel-caption"><b id="reel-title">Farma</b><span id="reel-label">Área controlada</span></div>
+              <div class="reel-nav">
+                <button type="button" data-dir="-1" aria-label="Clip anterior">←</button>
+                <button type="button" data-dir="1" aria-label="Clip siguiente">→</button>
+              </div>
+              <div class="reel-progress"><i id="reel-bar"></i></div>
+            </div>
+
+            <div class="reel-strip" id="reel-strip" role="list" aria-label="Todos los clips"></div>
           </div>
         </div>
       </section>

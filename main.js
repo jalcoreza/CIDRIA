@@ -14,84 +14,123 @@ menu?.addEventListener("click", (e) => {
   if (e.target.closest("a") && menu.classList.contains("main-menu-open")) toggle.click();
 });
 
-// ---------- Muro de cámaras ----------
-// Cada recuadro rota entre sus clips. Para agregar uno: pon el .mp4 y su -poster.jpg
-// en esta carpeta y suma una línea en la lista del recuadro que corresponda.
-const PLAYLISTS = [
-  [ // CAM-04 · laboratorio
-    { v: "lab", t: "Farma", l: "Área controlada" },
-    { v: "lab-microbiologia", t: "Microbiología", l: "Farma · siembra" },
-    { v: "lab-placas", t: "Placas de cultivo", l: "Laboratorio · control de calidad" },
-    { v: "lab-mesa", t: "Mesa de trabajo", l: "Laboratorio · análisis" },
-    { v: "lab-dosificacion", t: "Dosificación", l: "Laboratorio · preparación" },
-  ],
-  [ // CAM-05 · empaque farma
-    { v: "farma-empaque", t: "Empaque", l: "Farma · fin de línea", p: "farma-poster" },
-    { v: "farma-cajas", t: "Estuchado", l: "Farma · empaque secundario" },
-    { v: "etiquetado", t: "Etiquetado", l: "Farma · área limpia" },
-    { v: "farma-encajonado", t: "Encajonado", l: "Farma · despacho" },
-  ],
-  [ // CAM-02 · plásticos
-    { v: "plasticos-empaque", t: "Pesaje", l: "Plásticos · soplado" },
-    { v: "plasticos-ensamblaje", t: "Ensamblaje", l: "Plásticos · línea" },
-    { v: "plasticos-acabado", t: "Acabado", l: "Plásticos · control de calidad" },
-    { v: "plasticos-envasado", t: "Envasado", l: "Plásticos · fin de línea" },
-    { v: "plasticos-empaque-tubos", t: "Empaque", l: "Plásticos · embolsado" },
-  ],
-  [ // CAM-07 · operación y logística
-    { v: "logistica", t: "Logística", l: "Almacén · apilador" },
-    { v: "maquina-limpieza", t: "Operación de máquina", l: "Inyección · limpieza de molde" },
-    { v: "logistica-pallets", t: "Paletizado", l: "Almacén · transpaleta" },
-    { v: "lavado-piezas", t: "Lavado de piezas", l: "Planta · mantenimiento" },
-  ],
+// ---------- Sala de clips ----------
+// Para agregar un clip: pon el .mp4 y su -poster.jpg en esta carpeta y suma una línea aquí.
+// cat = áreas donde aparece en los filtros (puede ser más de una).
+// p = nombre del poster si no sigue el patrón <video>-poster.jpg
+const AREAS = ["Laboratorio", "Farma", "Bebidas", "Plásticos", "Acabados", "Almacén", "Operación"];
+const CLIPS = [
+  { v: "lab", t: "Laboratorio", l: "Farma · área controlada", cat: ["Laboratorio", "Farma"] },
+  { v: "plasticos-ensamblaje", t: "Ensamblaje", l: "Plásticos · línea", cat: ["Plásticos", "Acabados"] },
+  { v: "logistica", t: "Almacén", l: "Bodega · apilador eléctrico", cat: ["Almacén"] },
+  { v: "maquina-limpieza", t: "Operación de máquina", l: "Inyección · limpieza de molde", cat: ["Operación", "Plásticos"] },
+  { v: "lab-microbiologia", t: "Microbiología", l: "Laboratorio · siembra", cat: ["Laboratorio"] },
+  { v: "plasticos-acabado", t: "Acabado", l: "Plásticos · rebabeo", cat: ["Acabados", "Plásticos"] },
+  { v: "etiquetado", t: "Etiquetado", l: "Farma · área limpia", cat: ["Farma", "Acabados"] },
+  { v: "plasticos-empaque", t: "Pesaje", l: "Plásticos · soplado", cat: ["Plásticos"] },
+  { v: "lab-placas", t: "Placas de cultivo", l: "Laboratorio · control de calidad", cat: ["Laboratorio", "Farma"] },
+  { v: "lavado-piezas", t: "Lavado de piezas", l: "Planta · mantenimiento", cat: ["Operación"] },
+  { v: "plasticos-empaque-tubos", t: "Embolsado", l: "Plásticos · empaque", cat: ["Plásticos", "Almacén"] },
 ];
 
 (() => {
-  const feeds = [...document.querySelectorAll(".feed")];
-  if (!feeds.length) return;
+  const reel = document.querySelector(".reel");
+  if (!reel) return;
+  const $ = (id) => document.getElementById(id);
+  const video = $("reel-video");
+  const strip = $("reel-strip");
+  const filtersWrap = reel.querySelector(".reel-filters");
   const pad = (n) => String(n).padStart(2, "0");
+  const poster = (c) => `${c.p || c.v + "-poster"}.jpg`;
+  let filter = "Todo";
+  let list = CLIPS;
+  let i = 0;
+  let visible = false;
 
-  feeds.forEach((feed, k) => {
-    const list = PLAYLISTS[k];
-    const video = feed.querySelector("video");
-    if (!list || !video) return;
-    let i = 0;
-    video.loop = list.length < 2;
-    const warm = new Image(); // precarga el poster del siguiente clip
+  $("reel-count").textContent = "Captura continua en plantas y laboratorios de la región";
 
-    const show = (n) => {
-      const c = list[n];
-      feed.classList.add("is-switching");
-      setTimeout(() => {
-        video.src = `${c.v}.mp4`;
-        video.poster = `${c.p || c.v + "-poster"}.jpg`;
-        feed.querySelector("figcaption b").textContent = c.t;
-        feed.querySelector("figcaption span").textContent = c.l;
-        if (feed.dataset.visible === "1" && !reduceMotion) video.play().catch(() => {});
-        feed.classList.remove("is-switching");
-        const nx = list[(n + 1) % list.length];
-        warm.src = `${nx.p || nx.v + "-poster"}.jpg`;
-      }, 350);
-    };
-    video.addEventListener("ended", () => { i = (i + 1) % list.length; show(i); });
+  // Filtros
+  ["Todo", ...AREAS.filter((a) => CLIPS.some((c) => c.cat.includes(a)))].forEach((cat) => {
+    const b = document.createElement("button");
+    b.type = "button";
+    b.textContent = cat;
+    b.setAttribute("role", "tab");
+    b.addEventListener("click", () => setFilter(cat));
+    filtersWrap.appendChild(b);
   });
 
-  const io = new IntersectionObserver((entries) => {
-    entries.forEach(({ target, isIntersecting }) => {
-      const v = target.querySelector("video");
-      target.dataset.visible = isIntersecting ? "1" : "0";
-      if (isIntersecting && !reduceMotion) v.play().catch(() => {});
-      else v.pause();
+  function buildStrip() {
+    strip.innerHTML = "";
+    list.forEach((c, n) => {
+      const b = document.createElement("button");
+      b.type = "button";
+      b.className = "reel-thumb";
+      b.setAttribute("role", "listitem");
+      b.setAttribute("aria-label", `${c.t}: ${c.l}`);
+      b.innerHTML = `<img src="${poster(c)}" alt="" loading="lazy"><span class="reel-thumb-t">${c.t}</span><i></i>`;
+      b.addEventListener("click", () => show(n));
+      strip.appendChild(b);
     });
-  }, { threshold: 0.25 });
-  feeds.forEach((f) => io.observe(f));
+  }
 
-  setInterval(() => {
-    feeds.forEach((f) => {
-      const s = Math.floor(f.querySelector("video").currentTime);
-      f.querySelector(".feed-tc").textContent = `00:${pad(Math.floor(s / 60))}:${pad(s % 60)}`;
+  function setFilter(cat) {
+    filter = cat;
+    list = cat === "Todo" ? CLIPS : CLIPS.filter((c) => c.cat.includes(cat));
+    [...filtersWrap.children].forEach((b) => {
+      const on = b.textContent === cat;
+      b.classList.toggle("active", on);
+      b.setAttribute("aria-selected", String(on));
     });
-  }, 250);
+    buildStrip();
+    show(0);
+  }
+
+  function play() {
+    if (visible && !reduceMotion) video.play().catch(() => {});
+  }
+
+  function show(n) {
+    i = (n + list.length) % list.length;
+    const c = list[i];
+    reel.classList.add("is-switching");
+    setTimeout(() => {
+      video.src = `${c.v}.mp4`;
+      video.poster = poster(c);
+      $("reel-title").textContent = c.t;
+      $("reel-label").textContent = c.l;
+      $("reel-bar").style.width = "0%";
+      [...strip.children].forEach((el, k) => el.classList.toggle("active", k === i));
+      const active = strip.children[i];
+      if (active) strip.scrollTo({ left: active.offsetLeft - strip.clientWidth / 2 + active.clientWidth / 2, behavior: reduceMotion ? "auto" : "smooth" });
+      reel.classList.remove("is-switching");
+      play();
+    }, 300);
+  }
+
+  video.loop = false;
+  video.addEventListener("ended", () => show(i + 1));
+  video.addEventListener("timeupdate", () => {
+    const s = Math.floor(video.currentTime);
+    $("reel-tc").textContent = `00:${pad(Math.floor(s / 60))}:${pad(s % 60)}`;
+    const pct = video.duration ? (video.currentTime / video.duration) * 100 : 0;
+    $("reel-bar").style.width = `${pct}%`;
+    const bar = strip.children[i]?.querySelector("i");
+    if (bar) bar.style.width = `${pct}%`;
+  });
+  reel.querySelectorAll(".reel-nav button").forEach((b) =>
+    b.addEventListener("click", () => show(i + Number(b.dataset.dir)))
+  );
+  reel.addEventListener("keydown", (e) => {
+    if (e.key === "ArrowRight") show(i + 1);
+    if (e.key === "ArrowLeft") show(i - 1);
+  });
+
+  new IntersectionObserver(([e]) => {
+    visible = e.isIntersecting;
+    if (visible) play(); else video.pause();
+  }, { threshold: 0.3 }).observe(video);
+
+  setFilter("Todo");
 })();
 
 // ---------- Formulario (Netlify Forms) ----------
