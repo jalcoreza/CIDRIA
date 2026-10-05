@@ -257,3 +257,78 @@ if (year) year.textContent = new Date().getFullYear();
   if (reduceMotion) { v.removeAttribute("autoplay"); v.pause(); }
   else v.play().catch(() => {});
 })();
+
+// ---------- Capa 2: acciones etiquetadas ----------
+// s = segundo del clip donde empieza la acción. l / r = mano izquierda / derecha.
+// en = etiqueta original del dataset.
+const ACTIONS = [
+  { s: 0.0, l: "Doblar solapa de la caja", r: "Doblar solapa de la caja", en: "Fold flap of cardboard box with left hand AND fold flap of cardboard box with right hand" },
+  { s: 2.05, l: "Sostener solapa de la caja", r: "Sostener dispensador de cinta", en: "Hold cardboard box flap with left hand AND hold tape dispenser with right hand" },
+  { s: 5.05, l: "Sostener solapa de la caja", r: "Aplicar cinta a la caja", en: "Hold cardboard box flap with left hand AND apply tape to cardboard box with right hand" },
+  { s: 9.55, l: "Presionar cinta sobre la caja", r: "Sostener dispensador de cinta", en: "Press tape on cardboard box with left hand AND hold tape dispenser with right hand" },
+  { s: 10.55, l: "Girar la caja", r: "Sostener dispensador de cinta", en: "Rotate the cardboard box with left hand AND hold tape dispenser with right hand" },
+  { s: 14.05, l: "Sostener la caja", r: "Aplicar cinta a la caja", en: "Hold the cardboard box with left hand AND apply tape to cardboard box with right hand" },
+  { s: 16.55, l: "Sostener la caja", r: "Sostener dispensador de cinta", en: "Hold the cardboard box with left hand AND hold tape dispenser with right hand" },
+];
+const ACTIONS_DUR = 17.8;
+
+(() => {
+  const v = document.getElementById("act-video");
+  if (!v) return;
+  const $ = (id) => document.getElementById(id);
+  const log = $("act-log");
+  const tl = $("act-timeline");
+  const side = log.closest(".act-side");
+  const pad = (n) => String(n).padStart(2, "0");
+  const fmt = (s) => `${pad(Math.floor(s / 60))}:${pad(Math.floor(s % 60))}`;
+
+  ACTIONS.forEach((a, k) => {
+    const end = ACTIONS[k + 1] ? ACTIONS[k + 1].s : ACTIONS_DUR;
+    const li = document.createElement("li");
+    li.innerHTML = `<span class="act-log-tc">${fmt(a.s)}</span><span class="act-log-txt">` +
+      `<span class="act-es"><b><em>Izq</em>${a.l}</b><b><em>Der</em>${a.r}</b></span>` +
+      `<span class="act-en">${a.en}</span></span>`;
+    li.addEventListener("click", () => { v.currentTime = a.s + 0.05; v.play().catch(() => {}); });
+    log.appendChild(li);
+    const seg = document.createElement("span");
+    seg.style.flexGrow = String(end - a.s);
+    seg.innerHTML = "<i></i>";
+    tl.appendChild(seg);
+  });
+
+  // Idioma del registro: ES (traducción) o EN (etiqueta original)
+  side.dataset.lang = "es";
+  side.querySelectorAll(".act-lang button").forEach((b) =>
+    b.addEventListener("click", () => {
+      side.dataset.lang = b.dataset.lang;
+      side.querySelectorAll(".act-lang button").forEach((x) => x.classList.toggle("active", x === b));
+    })
+  );
+
+  let cur = -1;
+  const update = () => {
+    const t = v.currentTime;
+    let k = 0;
+    ACTIONS.forEach((a, n) => { if (t >= a.s) k = n; });
+    const end = ACTIONS[k + 1] ? ACTIONS[k + 1].s : ACTIONS_DUR;
+    [...tl.children].forEach((seg, n) => {
+      seg.firstChild.style.width = n < k ? "100%" : n > k ? "0%" : `${Math.min(100, ((t - ACTIONS[k].s) / (end - ACTIONS[k].s)) * 100)}%`;
+    });
+    $("act-tc").textContent = fmt(t);
+    if (k === cur) return;
+    cur = k;
+    [...log.children].forEach((li, n) => {
+      li.classList.toggle("active", n === k);
+      li.classList.toggle("done", n < k);
+    });
+    const li = log.children[k];
+    if (li && log.scrollHeight > log.clientHeight) log.scrollTo({ top: li.offsetTop - log.clientHeight / 2 + li.clientHeight / 2, behavior: reduceMotion ? "auto" : "smooth" });
+  };
+  v.addEventListener("timeupdate", update);
+  update();
+
+  new IntersectionObserver(([e]) => {
+    if (e.isIntersecting && !reduceMotion) v.play().catch(() => {});
+    else v.pause();
+  }, { threshold: 0.3 }).observe(v);
+})();

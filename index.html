@@ -43,6 +43,7 @@
         </a>
         <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="main-menu">Menú <b>+</b></button>
         <nav class="main-menu" id="main-menu" aria-label="Principal">
+          <a href="#dato">El dato</a>
           <a href="#samples">Lo que vemos</a>
           <a href="#contact">Contacto</a>
           <a class="nav-cta" href="#contact">Hablemos<span>→</span></a>
@@ -68,7 +69,7 @@
             <video id="hero-video" src="hero-manos.mp4" poster="hero-manos-poster.jpg" muted loop playsinline autoplay preload="auto" aria-hidden="true"></video>
             <span class="register-mark register-tl"></span><span class="register-mark register-tr"></span>
             <span class="register-mark register-bl"></span><span class="register-mark register-br"></span>
-            <div class="pov-hud pov-hud-top" aria-hidden="true"><span><i class="sample-rec"></i>REC <b id="hero-tc">00:00:00:00</b></span><span data-scramble>CAM-01 · POV</span></div>
+            <div class="pov-hud pov-hud-top" aria-hidden="true"><span><i class="sample-rec"></i>REC <b id="hero-tc">00:00:00:00</b></span><span data-scramble>CAPA 1 · MOVIMIENTO</span></div>
             <div class="pov-hud pov-hud-bottom" aria-hidden="true"><span id="hero-mode">VIDEO REAL · SEGUIMIENTO DE MANOS</span><span>FRAME <b id="hero-frame">000000</b></span></div>
             </div>
             <figcaption class="pov-caption"><b>Así se ve un dato.</b> Del video real a la posición 3D de cada mano y cada articulación, cuadro por cuadro. Con eso aprende un robot.</figcaption>
@@ -84,11 +85,38 @@
         </div>
       </div>
 
-      <!-- 01 SAMPLES -->
+      <!-- 01 EL DATO -->
+      <section class="section layers" id="dato" aria-labelledby="dato-title">
+        <div class="container">
+          <div class="section-intro">
+            <p class="section-tag"><strong>01</strong>El dato</p>
+            <div class="reveal-on-scroll">
+              <h2 id="dato-title">No solo video. Datos.</h2>
+              <p>Cada grabación sale con dos capas: el movimiento de las manos en 3D y cada acción descrita paso a paso, mano por mano.</p>
+            </div>
+          </div>
+
+          <div class="act reveal-on-scroll">
+            <figure class="act-stage" aria-label="Video real en primera persona con cada acción etiquetada por mano">
+              <video id="act-video" src="acciones.mp4" poster="acciones-poster.jpg" muted loop playsinline preload="metadata" aria-hidden="true"></video>
+              <div class="feed-hud"><span><i class="sample-rec"></i><b>REC · POV</b></span><span>CAPA 2 · ACCIÓN</span></div>
+              <div class="act-timeline" id="act-timeline" aria-hidden="true"></div>
+            </figure>
+
+            <div class="act-side">
+              <div class="act-side-title"><span>Registro de acciones</span><span class="act-lang" role="group" aria-label="Idioma de las etiquetas"><button type="button" data-lang="es" class="active">ES</button><button type="button" data-lang="en">EN</button></span><span id="act-tc">00:00</span></div>
+              <ol class="act-log" id="act-log"></ol>
+              <p class="act-note">El video muestra la etiqueta original en inglés. Aquí, su traducción y el tiempo de cada acción.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 02 SAMPLES -->
       <section class="section samples" id="samples" aria-labelledby="samples-title">
         <div class="container">
           <div class="section-intro">
-            <p class="section-tag"><strong>01</strong>Lo que vemos</p>
+            <p class="section-tag"><strong>02</strong>Lo que vemos</p>
             <div class="reveal-on-scroll">
               <h2 id="samples-title">Lo que ve la cámara.</h2>
               <p>Trabajo real, en ambientes reales. Elige un área o deja que corra.</p>
@@ -123,7 +151,7 @@
         <div class="hero-grid"></div>
         <div class="container invite-layout" style="position:relative">
           <div class="invite-copy reveal-on-scroll">
-            <p class="eyebrow eyebrow-light">02 — Conectemos</p>
+            <p class="eyebrow eyebrow-light">03 — Conectemos</p>
             <h2 id="contact-title">De la industria <em>al futuro.</em></h2>
             <p>¿Construyes robots o modelos? ¿Operas una planta en Latinoamérica? Escríbenos.</p>
             <div class="invite-note"><span>BOLIVIA</span><span>MANUFACTURA</span><span>FARMA</span><span>ALIMENTOS Y BEBIDAS</span></div>
