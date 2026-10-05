@@ -268,3 +268,11 @@ a { color:inherit; text-decoration:none; } a:focus-visible,button:focus-visible,
 /* v12 — contador genérico */
 .reel-count { color:var(--deep-steel); font-size:11px; }
 .reel-count:before { content:""; display:inline-block; width:7px; height:7px; margin-right:9px; border-radius:50%; background:#c9483f; vertical-align:1px; animation:rec-blink 1.4s steps(2,start) infinite; }
+
+/* v13 — hero: video real ↔ manos en 3D */
+.hero-pov video { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; }
+.pov-frame { aspect-ratio:1.6; background:#0f1a26; }
+@media (min-width:851px) { .pov-frame { aspect-ratio:1.6; } }
+.pov-frame:after { background:linear-gradient(180deg,rgba(29,45,61,.6),transparent 20%,transparent 76%,rgba(29,45,61,.75)); }
+#hero-mode { transition:color .3s ease; }
+.pov-frame.is-3d #hero-mode { color:var(--paper); }

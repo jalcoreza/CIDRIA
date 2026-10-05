@@ -240,3 +240,20 @@ if (year) year.textContent = new Date().getFullYear();
     hero.style.setProperty("--my", `${e.clientY - r.top}px`);
   });
 })();
+
+// ---------- Hero: video real ↔ reconstrucción 3D ----------
+// El clip ya trae la secuencia armada; aquí solo cambia la etiqueta según el tramo.
+(() => {
+  const v = document.getElementById("hero-video");
+  const mode = document.getElementById("hero-mode");
+  if (!v || !mode) return;
+  const IN = 3.95, OUT = 8.55; // segundos del clip donde se ve la vista 3D
+  const frame = v.closest(".pov-frame");
+  v.addEventListener("timeupdate", () => {
+    const is3d = v.currentTime >= IN && v.currentTime <= OUT;
+    mode.textContent = is3d ? "RECONSTRUCCIÓN 3D DE LAS MANOS" : "VIDEO REAL · SEGUIMIENTO DE MANOS";
+    frame.classList.toggle("is-3d", is3d);
+  });
+  if (reduceMotion) { v.removeAttribute("autoplay"); v.pause(); }
+  else v.play().catch(() => {});
+})();
